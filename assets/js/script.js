@@ -59,8 +59,15 @@ user.onclick = () => {
     console.log(constraints.video.facingMode);
     if (constraints.video.facingMode === 'user') constraints.video.facingMode = 'environment';
     else if (constraints.video.facingMode === 'environment') constraints.video.facingMode = 'user';
-    startStream(constraints);
-    video.play();
+    if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
+        const updatedConstraints = {
+            ...constraints,
+            deviceId: {
+                exact: cameraOptions.value
+            }
+        };
+        startStream(updatedConstraints);
+    }
 }
 
 const pauseStream = () => {
