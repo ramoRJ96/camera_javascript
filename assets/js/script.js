@@ -85,7 +85,7 @@ const startStream = async (constraints) => {
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
     try {
         if (stream) {
-          const tracks = stream.getTracks();
+          let tracks = stream.getTracks();
           console.log(tracks)
           tracks.forEach(track => track.stop());
         }
