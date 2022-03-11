@@ -100,6 +100,7 @@ const startStream = async (constraints) => {
 const handleStream = (stream) => {
     video.srcObject = null;
     video.srcObject = stream;
+    video.play;
     play.classList.add('d-none');
     pause.classList.remove('d-none');
     user.classList.remove('d-none');
