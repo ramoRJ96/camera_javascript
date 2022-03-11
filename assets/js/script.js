@@ -82,7 +82,7 @@ pause.onclick = pauseStream;
 screenshot.onclick = doScreenshot;
 
 const startStream = async (constraints) => {
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    let stream = await navigator.mediaDevices.getUserMedia(constraints);
     try {
         if (stream) {
           let tracks = stream.getTracks();
