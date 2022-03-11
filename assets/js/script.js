@@ -8,6 +8,7 @@ const screenshotImage = document.querySelector('img');
 const buttons = [...controls.querySelectorAll('button')];
 const supports = navigator.mediaDevices.getSupportedConstraints();
 let streamStarted = false;
+let stream;
 const [play, pause, screenshot, user] = buttons;
 
 const constraints = {
@@ -25,6 +26,32 @@ const constraints = {
         facingMode: 'user'
     }
 };
+
+const capture = async facingMode => {
+    if (!supports['facingMode']) {
+        alert('Browser Not supported!');
+    }
+    const options = {
+        ...constraints,
+        video: {
+            facingMode,
+        },
+    };
+
+    try {
+      if (stream) {
+        let tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+      }
+      stream = await navigator.mediaDevices.getUserMedia(options);
+    } catch (e) {
+      alert(e);
+      return;
+    }
+    video.srcObject = null;
+    video.srcObject = stream;
+    video.play();
+  }
 
 cameraOptions.onchange = () => {
     const updatedConstraints = {
@@ -57,9 +84,8 @@ play.onclick = () => {
 
 user.onclick = () => {
     console.log(constraints.video.facingMode);
-    if (constraints.video.facingMode === 'user') constraints.video.facingMode = 'environment';
-    else if (constraints.video.facingMode === 'environment') constraints.video.facingMode = 'user';
-    startStream(constraints);
+    if (constraints.video.facingMode === 'user') capture('environment');
+    else if (constraints.video.facingMode === 'environment') capture('user');
 }
 
 const pauseStream = () => {
@@ -81,26 +107,13 @@ pause.onclick = pauseStream;
 screenshot.onclick = doScreenshot;
 
 const startStream = async (constraints) => {
-    let stream = await navigator.mediaDevices.getUserMedia(constraints);
-    try {
-        if (stream) {
-          let tracks = stream.getTracks();
-          console.log(tracks)
-          tracks.forEach(track => track.stop());
-        }
-        stream = await navigator.mediaDevices.getUserMedia(constraints);
-      } catch (e) {
-        console.log(e);
-        return;
-      }
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
     handleStream(stream);
 };
 
 
 const handleStream = (stream) => {
-    video.srcObject = null;
     video.srcObject = stream;
-    video.play;
     play.classList.add('d-none');
     pause.classList.remove('d-none');
     user.classList.remove('d-none');
