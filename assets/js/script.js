@@ -59,6 +59,7 @@ user.onclick = () => {
     console.log(constraints.video.facingMode);
     if (constraints.video.facingMode === 'user') constraints.video.facingMode = 'environment';
     else if (constraints.video.facingMode === 'environment') constraints.video.facingMode = 'user';
+    startStream(updatedConstraints);
 }
 
 const pauseStream = () => {
@@ -91,7 +92,6 @@ const handleStream = (stream) => {
     pause.classList.remove('d-none');
     user.classList.remove('d-none');
     screenshot.classList.remove('d-none');
-
 };
 
 
