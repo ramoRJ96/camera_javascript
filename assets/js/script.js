@@ -89,7 +89,7 @@ const startStream = async (constraints) => {
           console.log(tracks)
           tracks.forEach(track => track.stop());
         }
-        stream = await navigator.mediaDevices.getUserMedia(options);
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
       } catch (e) {
         alert(e);
         return;
