@@ -91,7 +91,7 @@ const startStream = async (constraints) => {
         }
         stream = await navigator.mediaDevices.getUserMedia(constraints);
       } catch (e) {
-        alert(e);
+        console.log(e);
         return;
       }
     handleStream(stream);
