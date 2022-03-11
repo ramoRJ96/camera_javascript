@@ -7,10 +7,6 @@ const canvas = document.querySelector('canvas');
 const screenshotImage = document.querySelector('img');
 const buttons = [...controls.querySelectorAll('button')];
 const supports = navigator.mediaDevices.getSupportedConstraints();
-if (!supports['facingMode']) {
-    alert('Browser Not supported!');
-    return;
-}
 let streamStarted = false;
 const [play, pause, screenshot, user] = buttons;
 
@@ -30,29 +26,6 @@ const constraints = {
     }
 };
 
-const capture = async facingMode => {
-    const options = {
-        ...constraints,
-        video: {
-            facingMode,
-        },
-    };
-
-    try {
-      if (stream) {
-        const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
-      }
-      stream = await    navigator.mediaDevices.getUserMedia(options);
-    } catch (e) {
-      alert(e);
-      return;
-    }
-    video.srcObject = null;
-    video.srcObject = stream;
-    video.play();
-  }
-
 cameraOptions.onchange = () => {
     const updatedConstraints = {
         ...constraints,
@@ -60,7 +33,6 @@ cameraOptions.onchange = () => {
             exact: cameraOptions.value
         }
     };
-
     startStream(updatedConstraints);
 };
 
@@ -111,11 +83,23 @@ screenshot.onclick = doScreenshot;
 
 const startStream = async (constraints) => {
     const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    try {
+        if (stream) {
+          const tracks = stream.getTracks();
+          console.log(tracks)
+          tracks.forEach(track => track.stop());
+        }
+        stream = await navigator.mediaDevices.getUserMedia(options);
+      } catch (e) {
+        alert(e);
+        return;
+      }
     handleStream(stream);
 };
 
 
 const handleStream = (stream) => {
+    video.srcObject = null;
     video.srcObject = stream;
     play.classList.add('d-none');
     pause.classList.remove('d-none');
@@ -127,6 +111,7 @@ const handleStream = (stream) => {
 const getCameraSelection = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    if (videoDevices.length <= 1) cameraOptions.classList.add('d-none');
     const options = videoDevices.map(videoDevice => {
         return `<option value="${videoDevice.deviceId}">${videoDevice.label}</option>`;
     });
