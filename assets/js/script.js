@@ -58,7 +58,7 @@ play.onclick = () => {
 user.onclick = () => {
     console.log(constraints.video.facingMode);
     if (constraints.video.facingMode === 'user') constraints.video.facingMode = 'environment';
-    else constraints.video.facingMode === 'user';
+    else if (constraints.video.facingMode === 'environment') constraints.video.facingMode = 'user';
 }
 
 const pauseStream = () => {
