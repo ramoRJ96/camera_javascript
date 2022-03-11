@@ -48,7 +48,6 @@ const capture = async facingMode => {
       alert(e);
       return;
     }
-    video.srcObject = null;
     video.srcObject = stream;
     video.play();
   }
