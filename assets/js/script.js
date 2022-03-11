@@ -59,7 +59,7 @@ user.onclick = () => {
     console.log(constraints.video.facingMode);
     if (constraints.video.facingMode === 'user') constraints.video.facingMode = 'environment';
     else if (constraints.video.facingMode === 'environment') constraints.video.facingMode = 'user';
-    // navigator.mediaDevices.getUserMedia(constraints);
+    startStream(constraints);
     video.play();
 }
 
