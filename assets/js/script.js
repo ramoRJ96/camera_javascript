@@ -56,9 +56,7 @@ play.onclick = () => {
 };
 
 user.onclick = () => {
-    if (constraints.video.facingMode === 'user') constraints.video.facingMode = {
-        exact: 'environment'
-    };
+    if (constraints.video.facingMode === 'user') constraints.video.facingMode = 'environment';
     else constraints.video.facingMode === 'user';
 }
 
