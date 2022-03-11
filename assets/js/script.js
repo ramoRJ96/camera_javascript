@@ -6,6 +6,11 @@ const video = document.querySelector('video');
 const canvas = document.querySelector('canvas');
 const screenshotImage = document.querySelector('img');
 const buttons = [...controls.querySelectorAll('button')];
+const supports = navigator.mediaDevices.getSupportedConstraints();
+if (!supports['facingMode']) {
+    alert('Browser Not supported!');
+    return;
+}
 let streamStarted = false;
 const [play, pause, screenshot, user] = buttons;
 
@@ -24,6 +29,29 @@ const constraints = {
         facingMode: 'user'
     }
 };
+
+const capture = async facingMode => {
+    const options = {
+        ...constraints,
+        video: {
+            facingMode,
+        },
+    };
+
+    try {
+      if (stream) {
+        const tracks = stream.getTracks();
+        tracks.forEach(track => track.stop());
+      }
+      stream = await    navigator.mediaDevices.getUserMedia(options);
+    } catch (e) {
+      alert(e);
+      return;
+    }
+    video.srcObject = null;
+    video.srcObject = stream;
+    video.play();
+  }
 
 cameraOptions.onchange = () => {
     const updatedConstraints = {
