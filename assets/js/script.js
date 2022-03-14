@@ -36,7 +36,7 @@ const changeCamera = (facingMode) => {
     let stream;
 
     const capture = async facingMode => {
-        const options = {
+        const constraints = {
             ...constraints,
             video: {
                 facingMode,
@@ -49,7 +49,7 @@ const changeCamera = (facingMode) => {
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop());
             }
-            stream = await navigator.mediaDevices.getUserMedia(options);
+            stream = await navigator.mediaDevices.getUserMedia(constraints);
         } catch (e) {
             alert(e);
             return;
@@ -98,12 +98,12 @@ play.onclick = () => {
 
 user.onclick = () => {
     if (constraints.video.facingMode === 'user') {
-        console.log(constraints.video.facingMode);
         changeCamera('environment');
     } else if (constraints.video.facingMode === 'environment') {
-        console.log(constraints.video.facingMode);
+        
         changeCamera('user');
     }
+    console.log(constraints.video.facingMode);
 };
 
 const pauseStream = () => {
