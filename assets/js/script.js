@@ -36,7 +36,7 @@ const changeCamera = async (constraints, facingMode) => {
     if (facingMode) constraints.video.facingMode = facingMode;
     try {
         if (stream) {
-            console.log("tonga ato ve ?");
+            alert("tonga ato ve ?");
             const tracks = stream.getTracks();
             tracks.forEach(track => track.stop());
         }
