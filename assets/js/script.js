@@ -9,7 +9,7 @@ const buttons = [...controls.querySelectorAll('button')];
 let streamStarted = false;
 
 const [play, pause, screenshot, user] = buttons;
-
+let stream;
 let constraints = {
     audio: false,
     video: {
@@ -33,10 +33,14 @@ const changeCamera = async (constraints, facingMode) => {
         alert('Browser Not supported!');
         return;
     }
-    let stream;
-    if (facingMode) constraints.video.facingMode = facingMode;
     
+    if (facingMode) constraints.video.facingMode = facingMode;
     try {
+        if (stream) {
+            alert("tonga ato ve ?");
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+        }
         stream = await navigator.mediaDevices.getUserMedia(constraints);
     } catch (e) {
         alert(e);
@@ -50,7 +54,6 @@ const changeCamera = async (constraints, facingMode) => {
     pause.classList.remove('d-none');
     user.classList.remove('d-none');
     screenshot.classList.remove('d-none');
-
 }
 
 cameraOptions.onchange = async () => {
