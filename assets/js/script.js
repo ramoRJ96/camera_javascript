@@ -7,59 +7,37 @@ const canvas = document.querySelector('canvas');
 const screenshotImage = document.querySelector('img');
 const buttons = [...controls.querySelectorAll('button')];
 let streamStarted = false;
-let mode = 'user';
 
 const [play, pause, screenshot, user] = buttons;
 
-// let constraints = {
-//     video: {
-//         width: {
-//             min: 1280,
-//             ideal: 1920,
-//             max: 2560,
-//         },
-//         height: {
-//             min: 720,
-//             ideal: 1080,
-//             max: 1440
-//         },
-//         facingMode: 'environment'
-//     },
-// };
+let constraints = {
+    video: {
+        width: {
+            min: 1280,
+            ideal: 1920,
+            max: 2560,
+        },
+        height: {
+            min: 720,
+            ideal: 1080,
+            max: 1440
+        },
+        facingMode: 'environment'
+    },
+};
 
-const changeCamera = async (facingMode) => {
+const changeCamera = async (constraints, facingMode) => {
     const supports = navigator.mediaDevices.getSupportedConstraints();
     if (!supports['facingMode']) {
         alert('Browser Not supported!');
         return;
     }
-    
     let stream;
-    let options;
-    if (facingMode) {
-        mode = facingMode;
-        options = {
-            audio: false,
-            video: {
-              facingMode,
-            },
-        };
-    } else {
-        options = {
-            audio: false,
-            video: {
-              facingMode: 'user',
-            },
-        };
-    }
+    if (facingMode) constraints.video.facingMode = facingMode;
+    
     try {
-        if (stream) {
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-        }
-        stream = await navigator.mediaDevices.getUserMedia(options);
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
     } catch (e) {
-        
         alert(e);
         return;
     }
@@ -75,13 +53,13 @@ const changeCamera = async (facingMode) => {
 }
 
 cameraOptions.onchange = async () => {
-    // const updatedConstraints = {
-    //     ...constraints,
-    //     deviceId: {
-    //         exact: cameraOptions.value
-    //     }
-    // };
-    await changeCamera();
+    const updatedConstraints = {
+        ...constraints,
+        deviceId: {
+            exact: cameraOptions.value
+        }
+    };
+    await changeCamera(updatedConstraints);
 };
 
 play.onclick = () => {
@@ -93,17 +71,23 @@ play.onclick = () => {
         return;
     }
     if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
-        changeCamera();
+        const updatedConstraints = {
+            ...constraints,
+            deviceId: {
+                exact: cameraOptions.value
+            }
+        };
+        changeCamera(updatedConstraints);
     }
 };
 
 user.onclick = async () => {
-    if (mode === 'user') {
-        await changeCamera('environment');
-    } else if (mode === 'environment') {
-        await changeCamera('user');
+    if (constraints.video.facingMode === 'user') {
+        await changeCamera(constraints, 'environment');
+    } else if (constraints.video.facingMode === 'environment') {
+        await changeCamera(constraints, 'user');
     }
-    alert(mode);
+    console.log(constraints.video.facingMode);
 };
 
 const pauseStream = () => {
