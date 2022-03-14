@@ -36,12 +36,7 @@ const changeCamera = (facingMode) => {
     let stream;
 
     const capture = async facingMode => {
-        constraints = {
-            ...constraints,
-            video: {
-                facingMode,
-            },
-        };
+        constraints.video.facingMode = facingMode;
 
         try {
             if (stream) {
@@ -100,7 +95,6 @@ user.onclick = () => {
     if (constraints.video.facingMode === 'user') {
         changeCamera('environment');
     } else if (constraints.video.facingMode === 'environment') {
-        
         changeCamera('user');
     }
     console.log(constraints.video.facingMode);
