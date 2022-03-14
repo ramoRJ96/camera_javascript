@@ -10,7 +10,7 @@ let streamStarted = false;
 
 const [play, pause, screenshot, user] = buttons;
 
-const constraints = {
+let constraints = {
     video: {
         width: {
             min: 1280,
