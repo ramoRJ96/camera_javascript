@@ -26,15 +26,14 @@ let constraints = {
     },
 };
 
-const changeCamera = (constraints, facingMode) => {
+const changeCamera = async (constraints, facingMode) => {
     const supports = navigator.mediaDevices.getSupportedConstraints();
     if (!supports['facingMode']) {
         alert('Browser Not supported!');
         return;
     }
     let stream;
-
-    if (facingMode !== '') constraints.video.facingMode = facingMode;
+    if (facingMode) constraints.video.facingMode = facingMode;
     try {
         if (stream) {
             console.log("tonga ato ve ?");
@@ -57,14 +56,14 @@ const changeCamera = (constraints, facingMode) => {
 
 }
 
-cameraOptions.onchange = () => {
+cameraOptions.onchange = async () => {
     const updatedConstraints = {
         ...constraints,
         deviceId: {
             exact: cameraOptions.value
         }
     };
-    changeCamera(updatedConstraints);
+    await changeCamera(updatedConstraints);
 };
 
 play.onclick = () => {
@@ -86,11 +85,11 @@ play.onclick = () => {
     }
 };
 
-user.onclick = () => {
+user.onclick = async () => {
     if (constraints.video.facingMode === 'user') {
-        changeCamera(constraints, 'environment');
+        await changeCamera(constraints, 'environment');
     } else if (constraints.video.facingMode === 'environment') {
-        changeCamera(constraints, 'user');
+        await changeCamera(constraints, 'user');
     }
     console.log(constraints.video.facingMode);
 };
