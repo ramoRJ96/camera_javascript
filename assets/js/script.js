@@ -26,16 +26,6 @@ const constraints = {
   },
 };
 
-cameraOptions.onchange = () => {
-  const updatedConstraints = {
-    ...constraints,
-    deviceId: {
-      exact: cameraOptions.value
-    }
-  };
-  startStream(updatedConstraints);
-};
-
 const changeCamera = (facingMode) => {
     const supports = navigator.mediaDevices.getSupportedConstraints();
     if (!supports['facingMode']) {
@@ -44,6 +34,8 @@ const changeCamera = (facingMode) => {
     }
 
     let stream;
+
+
 
     const capture = async facingMode => {
         const options = {
@@ -54,11 +46,12 @@ const changeCamera = (facingMode) => {
         };
 
         try {
-        if (stream) {
-            const tracks = stream.getTracks();
-            tracks.forEach(track => track.stop());
-        }
-        stream = await navigator.mediaDevices.getUserMedia(options);
+            if (stream) {
+                console.log("tonga ato ve ?");
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+            }
+            stream = await navigator.mediaDevices.getUserMedia(options);
         } catch (e) {
         alert(e);
         return;
@@ -66,10 +59,25 @@ const changeCamera = (facingMode) => {
         video.srcObject = null;
         video.srcObject = stream;
         video.play();
+
+        play.classList.add('d-none');
+        pause.classList.remove('d-none');
+        user.classList.remove('d-none');
+        screenshot.classList.remove('d-none');
     }
 
-    return capture(facingMode);
+    return facingMode === '' ? capture() : capture(facingMode);
 }
+
+cameraOptions.onchange = () => {
+  const updatedConstraints = {
+    ...constraints,
+    deviceId: {
+      exact: cameraOptions.value
+    }
+  };
+  changeCamera(updatedConstraints);
+};
 
 play.onclick = () => {
   if (streamStarted) {
@@ -86,14 +94,13 @@ play.onclick = () => {
         exact: cameraOptions.value
       }
     };
-    startStream(updatedConstraints);
+    changeCamera(updatedConstraints);
   }
 };
 
 user.onclick = () => {
     if (constraints.video.facingMode === 'user') changeCamera('environment');
     else if (constraints.video.facingMode === 'environment') changeCamera('user');
- 
 };
 
 const pauseStream = () => {
@@ -114,19 +121,16 @@ const doScreenshot = () => {
 pause.onclick = pauseStream;
 screenshot.onclick = doScreenshot;
 
-const startStream = async (constraints) => {
-  const stream = await    navigator.mediaDevices.getUserMedia(constraints);
-  handleStream(stream);
-};
+// const startStream = async (constraints) => {
+//   const stream = await  navigator.mediaDevices.getUserMedia(constraints);
+//   handleStream(stream);
+// };
 
 
-const handleStream = (stream) => {
-  video.srcObject = stream;
-  play.classList.add('d-none');
-  pause.classList.remove('d-none');
-  user.classList.remove('d-none');
-  screenshot.classList.remove('d-none');
-};
+// const handleStream = (stream) => {
+//   video.srcObject = stream;
+  
+// };
 
 
 const getCameraSelection = async () => {
