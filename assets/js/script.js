@@ -37,7 +37,6 @@ const changeCamera = async (constraints, facingMode) => {
     if (facingMode) constraints.video.facingMode = facingMode;
     try {
         if (stream) {
-            alert("tonga ato ve ?");
             const tracks = stream.getTracks();
             tracks.forEach(track => track.stop());
         }
@@ -111,18 +110,6 @@ const doScreenshot = () => {
 
 pause.onclick = pauseStream;
 screenshot.onclick = doScreenshot;
-
-// const startStream = async (constraints) => {
-//   const stream = await  navigator.mediaDevices.getUserMedia(constraints);
-//   handleStream(stream);
-// };
-
-
-// const handleStream = (stream) => {
-//   video.srcObject = stream;
-
-// };
-
 
 const getCameraSelection = async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
