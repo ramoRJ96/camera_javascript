@@ -26,7 +26,7 @@ let constraints = {
     },
 };
 
-const changeCamera = (facingMode) => {
+const changeCamera = (constraints, facingMode) => {
     const supports = navigator.mediaDevices.getSupportedConstraints();
     if (!supports['facingMode']) {
         alert('Browser Not supported!');
@@ -58,8 +58,8 @@ const changeCamera = (facingMode) => {
         user.classList.remove('d-none');
         screenshot.classList.remove('d-none');
     }
-
-    return facingMode === '' ? capture() : capture(facingMode);
+    if (facingMode === '') capture();
+    else capture(facingMode);
 }
 
 cameraOptions.onchange = () => {
@@ -93,9 +93,9 @@ play.onclick = () => {
 
 user.onclick = () => {
     if (constraints.video.facingMode === 'user') {
-        changeCamera('environment');
+        changeCamera(constraints, 'environment');
     } else if (constraints.video.facingMode === 'environment') {
-        changeCamera('user');
+        changeCamera(constraints, 'user');
     }
     console.log(constraints.video.facingMode);
 };
