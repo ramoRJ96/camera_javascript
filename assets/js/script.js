@@ -35,8 +35,6 @@ const changeCamera = (facingMode) => {
 
     let stream;
 
-
-
     const capture = async facingMode => {
         const options = {
         ...constraints,
