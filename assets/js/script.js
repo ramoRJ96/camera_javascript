@@ -75,12 +75,12 @@ const changeCamera = async (facingMode) => {
 }
 
 cameraOptions.onchange = async () => {
-    const updatedConstraints = {
-        ...constraints,
-        deviceId: {
-            exact: cameraOptions.value
-        }
-    };
+    // const updatedConstraints = {
+    //     ...constraints,
+    //     deviceId: {
+    //         exact: cameraOptions.value
+    //     }
+    // };
     await changeCamera();
 };
 
@@ -93,12 +93,6 @@ play.onclick = () => {
         return;
     }
     if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
-        const updatedConstraints = {
-            ...constraints,
-            deviceId: {
-                exact: cameraOptions.value
-            }
-        };
         changeCamera();
     }
 };
