@@ -11,19 +11,19 @@ let streamStarted = false;
 const [play, pause, screenshot, user] = buttons;
 
 const constraints = {
-  video: {
-    width: {
-      min: 1280,
-      ideal: 1920,
-      max: 2560,
+    video: {
+        width: {
+            min: 1280,
+            ideal: 1920,
+            max: 2560,
+        },
+        height: {
+            min: 720,
+            ideal: 1080,
+            max: 1440
+        },
+        facingMode: 'environment'
     },
-    height: {
-      min: 720,
-      ideal: 1080,
-      max: 1440
-    },
-    facingMode: 'environment'
-  },
 };
 
 const changeCamera = (facingMode) => {
@@ -37,10 +37,10 @@ const changeCamera = (facingMode) => {
 
     const capture = async facingMode => {
         const options = {
-        ...constraints,
-        video: {
-            facingMode,
-        },
+            ...constraints,
+            video: {
+                facingMode,
+            },
         };
 
         try {
@@ -51,8 +51,8 @@ const changeCamera = (facingMode) => {
             }
             stream = await navigator.mediaDevices.getUserMedia(options);
         } catch (e) {
-        alert(e);
-        return;
+            alert(e);
+            return;
         }
         video.srcObject = null;
         video.srcObject = stream;
@@ -68,52 +68,57 @@ const changeCamera = (facingMode) => {
 }
 
 cameraOptions.onchange = () => {
-  const updatedConstraints = {
-    ...constraints,
-    deviceId: {
-      exact: cameraOptions.value
-    }
-  };
-  changeCamera(updatedConstraints);
+    const updatedConstraints = {
+        ...constraints,
+        deviceId: {
+            exact: cameraOptions.value
+        }
+    };
+    changeCamera(updatedConstraints);
 };
 
 play.onclick = () => {
-  if (streamStarted) {
-    video.play();
-    play.classList.add('d-none');
-    user.classList.remove('d-none');
-    pause.classList.remove('d-none');
-    return;
-  }
-  if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
-    const updatedConstraints = {
-      ...constraints,
-      deviceId: {
-        exact: cameraOptions.value
-      }
-    };
-    changeCamera(updatedConstraints);
-  }
+    if (streamStarted) {
+        video.play();
+        play.classList.add('d-none');
+        user.classList.remove('d-none');
+        pause.classList.remove('d-none');
+        return;
+    }
+    if ('mediaDevices' in navigator && navigator.mediaDevices.getUserMedia) {
+        const updatedConstraints = {
+            ...constraints,
+            deviceId: {
+                exact: cameraOptions.value
+            }
+        };
+        changeCamera(updatedConstraints);
+    }
 };
 
 user.onclick = () => {
-    if (constraints.video.facingMode === 'user') changeCamera('environment');
-    else if (constraints.video.facingMode === 'environment') changeCamera('user');
+    if (constraints.video.facingMode === 'user') {
+        console.log(constraints.video.facingMode);
+        changeCamera('environment');
+    } else if (constraints.video.facingMode === 'environment') {
+        console.log(constraints.video.facingMode);
+        changeCamera('user');
+    }
 };
 
 const pauseStream = () => {
-  video.pause();
-  play.classList.remove('d-none');
-  user.classList.add('d-none');
-  pause.classList.add('d-none');
+    video.pause();
+    play.classList.remove('d-none');
+    user.classList.add('d-none');
+    pause.classList.add('d-none');
 };
 
 const doScreenshot = () => {
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
-  canvas.getContext('2d').drawImage(video, 0, 0);
-  screenshotImage.src = canvas.toDataURL('image/webp');
-  screenshotImage.classList.remove('d-none');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    screenshotImage.src = canvas.toDataURL('image/webp');
+    screenshotImage.classList.remove('d-none');
 };
 
 pause.onclick = pauseStream;
@@ -127,17 +132,17 @@ screenshot.onclick = doScreenshot;
 
 // const handleStream = (stream) => {
 //   video.srcObject = stream;
-  
+
 // };
 
 
 const getCameraSelection = async () => {
-  const devices = await navigator.mediaDevices.enumerateDevices();
-  const videoDevices = devices.filter(device => device.kind === 'videoinput');
-  const options = videoDevices.map(videoDevice => {
-    return `<option value="${videoDevice.deviceId}">${videoDevice.label}</option>`;
-  });
-  cameraOptions.innerHTML = options.join('');
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const videoDevices = devices.filter(device => device.kind === 'videoinput');
+    const options = videoDevices.map(videoDevice => {
+        return `<option value="${videoDevice.deviceId}">${videoDevice.label}</option>`;
+    });
+    cameraOptions.innerHTML = options.join('');
 };
 
 getCameraSelection();
