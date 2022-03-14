@@ -32,34 +32,29 @@ const changeCamera = (constraints, facingMode) => {
         alert('Browser Not supported!');
         return;
     }
-
     let stream;
 
-    const capture = async facingMode => {
-        constraints.video.facingMode = facingMode;
-
-        try {
-            if (stream) {
-                console.log("tonga ato ve ?");
-                const tracks = stream.getTracks();
-                tracks.forEach(track => track.stop());
-            }
-            stream = await navigator.mediaDevices.getUserMedia(constraints);
-        } catch (e) {
-            alert(e);
-            return;
+    if (facingMode !== '') constraints.video.facingMode = facingMode;
+    try {
+        if (stream) {
+            console.log("tonga ato ve ?");
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
         }
-        video.srcObject = null;
-        video.srcObject = stream;
-        video.play();
-
-        play.classList.add('d-none');
-        pause.classList.remove('d-none');
-        user.classList.remove('d-none');
-        screenshot.classList.remove('d-none');
+        stream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (e) {
+        alert(e);
+        return;
     }
-    if (facingMode === '') capture();
-    else capture(facingMode);
+    video.srcObject = null;
+    video.srcObject = stream;
+    video.play();
+
+    play.classList.add('d-none');
+    pause.classList.remove('d-none');
+    user.classList.remove('d-none');
+    screenshot.classList.remove('d-none');
+
 }
 
 cameraOptions.onchange = () => {
